@@ -1,0 +1,52 @@
+---
+title: "About"
+author: "Alyson Givre"
+date: "4/25/2021"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+All data used in this application was extracted from the [FBI Uniform Crime Reporting (UCR) Program](https://www.fbi.gov/services/cjis/ucr). The program has been collecting data since 1930 from over 18,000 law enforcement agencies.
+
+This application includes a subset of this data from 2010 to 2019 focusing on the violent crimes committed broken down by state. Below is a further subset of the data which includes the columns:
+  * State
+  * Population - Total population of the state
+  * ViolentCrime - Total number of violent crimes committed
+  * Year
+  * Legalized - The legalization status of recreational cannabis
+
+```{r display-state, results='asis'}
+source('../process-data.R')
+
+fbi_state <- get_state_data()
+fbi_state[, c(1, 4, 5, 14, 16)] %>%
+  kbl() %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "200px")
+```
+
+
+Another subset this application looks at is the same information, focused on the metropolitan areas within each state. The data below contains the following columns:
+
+  * State
+  * Population - Total population within the state's metropolitan areas
+  * ViolentCrime - Total number of violent crimes committed within the state's metropolitan areas
+  * Year
+  * Legalized - The legalization status of recreational cannabis
+
+```{r display-metro, results='asis'}
+source('../process-data.R')
+
+fbi_state <- get_metro_data()
+fbi_state[, c(1, 4, 5, 14, 16)] %>%
+  kbl() %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "200px")
+```
+
+
+

@@ -9,6 +9,8 @@
 
 library(shiny)
 library(markdown)
+library(knitr)
+library(kableExtra)
 
 # Define UI for application that draws a histogram
 ui <- shinyUI(
@@ -30,7 +32,7 @@ server <- function(input, output) {
     
     output$page2 <- renderUI({
         mainPanel(
-            renderText('Hello world 1')
+            HTML(markdown::markdownToHTML(knit('./text/About.Rmd', quiet=TRUE)))
         )
     })
     
