@@ -2,14 +2,14 @@ library('readxl')
 library('tidyr')
 library('dplyr')
 
-get_state_data <- function() {
+get_state_data <- function(path) {
   fbi_state <- data.frame()
   
   for (i in 2010:2019) {
-    file_name <- paste0("../data/", "FBI_", i, ".xls")
+    file_name <- paste0(path, "FBI_", i, ".xls")
     
     result <- read_excel(file_name, skip=3)
-    result <- result %>% filter(row_number() <= n()-6)
+    result <- result %>% filter(row_number() <= n()-5)
     result[, c(4:ncol(result))] <- sapply(result[, c(4:ncol(result))], as.numeric)
     
     if (ncol(result) > 13) {
@@ -28,13 +28,15 @@ get_state_data <- function() {
     result_state <- result_state %>% filter(is.na(Total))
     
     # Calculate crime rate
-    result_state$CrimeRate <- result_state$ViolentCrime / result_state$Population
+    result_state$CrimeRate <- result_state$ViolentCrime / (result_state$Population / 100000)
 
     fbi_state <- rbind(fbi_state, result_state)
   }
   
   # Clean up state names
   fbi_state$State <- gsub('[0-9]', '', fbi_state$State)
+  fbi_state$State <- gsub(',', '', fbi_state$State)
+  fbi_state$State <- trimws(fbi_state$State)
   
   # Remove any rows with incomplete data
   fbi_state <- fbi_state[!is.na(fbi_state$CrimeRate), ]
@@ -43,11 +45,11 @@ get_state_data <- function() {
   fbi_state
 }
 
-get_metro_data <- function() {
+get_metro_data <- function(path) {
   fbi_metro <- data.frame()
   
   for (i in 2010:2019) {
-    file_name <- paste0("../data/", "FBI_", i, ".xls")
+    file_name <- paste0(path, "FBI_", i, ".xls")
     
     result <- read_excel(file_name, skip=3)
     result <- result %>% filter(row_number() <= n()-6)
@@ -73,13 +75,15 @@ get_metro_data <- function() {
     result_metro <- result_metro %>% filter(Total == 'Estimated total')
     
     # Calculate crime rate
-    result_metro$CrimeRate <- result_metro$ViolentCrime / result_metro$Population
+    result_metro$CrimeRate <- result_metro$ViolentCrime / (result_metro$Population / 100000)
     
     fbi_metro <- rbind(fbi_metro, result_metro)
   }
   
   # Clean up state names
   fbi_metro$State <- gsub('[0-9]', '', fbi_metro$State)
+  fbi_metro$State <- gsub(',', '', fbi_metro$State)
+  fbi_metro$State <- trimws(fbi_metro$State)
   
   # Remove any rows with incomplete data
   fbi_metro <- fbi_metro[!is.na(fbi_metro$CrimeRate), ]
@@ -89,6 +93,7 @@ get_metro_data <- function() {
 }
 
 add_legalization_status <- function(fbi) {
+  fbi$Legalized <- FALSE
   fbi$Legalized <- fbi$Year >= 2015 & fbi$State == 'ALASKA'
   fbi$Legalized <- fbi$Legalized | (fbi$Year >= 2018 & fbi$State == 'CALIFORNIA')
   fbi$Legalized <- fbi$Legalized | (fbi$Year >= 2013 & fbi$State == 'COLORADO')
@@ -99,6 +104,28 @@ add_legalization_status <- function(fbi) {
   fbi$Legalized <- fbi$Legalized | (fbi$Year >= 2014 & fbi$State == 'OREGON')
   fbi$Legalized <- fbi$Legalized | (fbi$Year >= 2018 & fbi$State == 'VERMONT')
   fbi$Legalized <- fbi$Legalized | (fbi$Year >= 2012 & fbi$State == 'WASHINGTON')
-
+  
   fbi  
+}
+
+get_data <- function(level, path) {
+  if (level == 'State') {
+    get_state_data(path)
+  }
+  else {
+    get_metro_data(path)
+  }
+}
+
+descriptive_stats <- function(level, path) {
+  fbi <- get_data(level, path)
+  s <- sd(fbi$CrimeRate)
+  v <- s**2
+  
+  paste(sprintf('Mean: %.2f', mean(fbi$CrimeRate)), 
+        sprintf('Median: %.2f', median(fbi$CrimeRate)),
+        sprintf('Standard deviation: %.2f', s),
+        sprintf('Variance: %.2f', v),
+        sprintf('Range: (%.2f, %.2f)', min(fbi$CrimeRate), max(fbi$CrimeRate)),
+        sep='\n')
 }

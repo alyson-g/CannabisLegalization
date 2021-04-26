@@ -11,18 +11,20 @@ library(shiny)
 library(markdown)
 library(knitr)
 library(kableExtra)
+library(rmarkdown)
 
-# Define UI for application that draws a histogram
+# Define UI for application
 ui <- shinyUI(
     navbarPage('The Effect of Cannabis Legalization on Violent Crime', 
                tabPanel('Introduction', uiOutput('page1')),
                tabPanel('About the Data', uiOutput('page2')),
-               tabPanel('Status of Legalization', uiOutput('page3')),
-               tabPanel('Citations', uiOutput('page4'))
+               tabPanel('Mapping the Data', uiOutput('page3')),
+               tabPanel('Exploratory Data Analysis', uiOutput('page4')),
+               tabPanel('Citations', uiOutput('page5'))
                )
 )
 
-# Define server logic required to draw a histogram
+# Define server logic
 server <- function(input, output) {
     output$page1 <- renderUI({
         mainPanel (
@@ -41,28 +43,45 @@ server <- function(input, output) {
             sidebarPanel(
                 selectInput('year', label='Year', 
                              choices=c(2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019),
-                             multiple=FALSE, selected=2019)
+                             multiple=FALSE, selected=2010)
             ),
             mainPanel (
-                renderText('Hello world')
+                plotOutput(outputId='plotCountry', width='500px', height='300px'),
+                plotOutput(outputId='plotCrime', width='500px', height='300px')
             )
         )
     })
     
     output$page4 <- renderUI({
+        splitLayout(
+            HTML(markdown::markdownToHTML(knit('./text/EDA_State.Rmd', quiet=TRUE))),
+            HTML(markdown::markdownToHTML(knit('./text/EDA_Metro.Rmd', quiet=TRUE)))
+        )
+    })
+    
+    output$page5 <- renderUI({
         mainPanel (
             includeMarkdown('./text/Citations.md')
         )
     }) 
     
-    # output$distPlot <- renderPlot({
-    #     # generate bins based on input$bins from ui.R
-    #     x    <- faithful[, 2]
-    #     bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    # 
-    #     # draw the histogram with the specified number of bins
-    #     hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    # })
+    output$plotCountry <- renderPlot({
+        source('./process-data.R')
+        year <- input$year
+        fbi <- get_state_data('./data/')
+        
+        source('./graphing.R')
+        legalized_map(fbi, year)
+    })
+    
+    output$plotCrime <- renderPlot({
+        source('./process-data.R')
+        year <- input$year
+        fbi <- get_state_data('./data/')
+        
+        source('./graphing.R')
+        crime_map(fbi, year)
+    })
 }
 
 # Run the application 

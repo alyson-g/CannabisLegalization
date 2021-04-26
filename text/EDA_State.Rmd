@@ -1,0 +1,68 @@
+---
+title: "EDA State"
+author: "Alyson Givre"
+date: "4/25/2021"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# State Level Data
+
+### Descriptive Statistics
+```{r state, echo=FALSE}
+source('../process-data.R')
+
+fbi <- get_state_data('../data/')
+
+s <- sd(fbi$CrimeRate)
+v <- s**2
+  
+sprintf('Mean: %.2f', mean(fbi$CrimeRate))
+sprintf('Median: %.2f', median(fbi$CrimeRate))
+sprintf('Standard deviation: %.2f', s)
+sprintf('Variance: %.2f', v)
+sprintf('Range: (%.2f, %.2f)', min(fbi$CrimeRate), max(fbi$CrimeRate))
+```
+
+
+### Histogram of Crime Rate
+```{r hist, echo=FALSE}
+
+ggplot(data=fbi, aes(x=CrimeRate)) +
+  geom_histogram(aes(y = ..density..,fill=..count..,alpha=0.2),bins=32, closed='left') +
+  geom_density(fill='red',alpha=0.2) +
+  xlab('Crime Rate (per 100,000)') +
+  ylab('Density')
+```
+
+
+### QQ Plot
+```{r qq, echo=FALSE}
+
+ggplot(fbi, aes(sample=CrimeRate)) +
+  stat_qq() +
+  stat_qq_line()
+```
+
+### Population versus Violent Crime
+```{r vc, echo=FALSE}
+
+fbi$LegalizedText <- ifelse(fbi$Legalized, 'Legal', 'Illegal')
+
+ggplot(fbi, aes(x=Population, y=ViolentCrime)) + 
+  geom_point() +
+  geom_smooth(method=lm) +
+  facet_grid(. ~ LegalizedText)
+```
+
+### Population versus Crime Rate
+```{r pop, echo=FALSE}
+ggplot(fbi, aes(x=Population, y=CrimeRate)) + 
+  geom_point() +
+  geom_smooth(method=lm) +
+  facet_grid(. ~ LegalizedText)
+```

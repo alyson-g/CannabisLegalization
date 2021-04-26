@@ -17,13 +17,14 @@ This application includes a subset of this data from 2010 to 2019 focusing on th
   * Population - Total population of the state
   * ViolentCrime - Total number of violent crimes committed
   * Year
+  * CrimeRate - Number of violent crimes committed per 100,000 people
   * Legalized - The legalization status of recreational cannabis
 
 ```{r display-state, results='asis'}
 source('../process-data.R')
 
-fbi_state <- get_state_data()
-fbi_state[, c(1, 4, 5, 14, 16)] %>%
+fbi_state <- get_state_data('../data/')
+fbi_state[, c(1, 4, 5, 14, 15, 16)] %>%
   kbl() %>%
   kable_styling() %>%
   scroll_box(width = "100%", height = "200px")
@@ -36,13 +37,14 @@ Another subset this application looks at is the same information, focused on the
   * Population - Total population within the state's metropolitan areas
   * ViolentCrime - Total number of violent crimes committed within the state's metropolitan areas
   * Year
+  * CrimeRate - Number of violent crimes committed per 100,000 people
   * Legalized - The legalization status of recreational cannabis
 
 ```{r display-metro, results='asis'}
 source('../process-data.R')
 
-fbi_state <- get_metro_data()
-fbi_state[, c(1, 4, 5, 14, 16)] %>%
+fbi_state <- get_metro_data('../data/')
+fbi_state[, c(1, 4, 5, 14, 15, 16)] %>%
   kbl() %>%
   kable_styling() %>%
   scroll_box(width = "100%", height = "200px")
