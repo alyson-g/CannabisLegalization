@@ -28,7 +28,8 @@ get_state_data <- function(path) {
     result_state <- result_state %>% filter(is.na(Total))
     
     # Calculate crime rate
-    result_state$CrimeRate <- result_state$ViolentCrime / (result_state$Population / 100000)
+    result_state$ViolentCrimeRate <- result_state$ViolentCrime / (result_state$Population / 100000)
+    result_state$PropertyCrimeRate <- result_state$PropertyCrime / (result_state$Population / 100000)
 
     fbi_state <- rbind(fbi_state, result_state)
   }
@@ -39,7 +40,8 @@ get_state_data <- function(path) {
   fbi_state$State <- trimws(fbi_state$State)
   
   # Remove any rows with incomplete data
-  fbi_state <- fbi_state[!is.na(fbi_state$CrimeRate), ]
+  fbi_state <- fbi_state[!is.na(fbi_state$ViolentCrimeRate), ]
+  fbi_state <- fbi_state[!is.na(fbi_state$PropertyCrimeRate), ]
   
   fbi_state <- add_legalization_status(fbi_state)
   fbi_state
@@ -70,12 +72,16 @@ get_metro_data <- function(path) {
     result_metro <- result %>% filter(Area == 'Metropolitan Statistical Area')
     
     # Extra processing for metro rows
-    result_metro$Population[result_metro$Population <= 1] <- NA
+    result_metro$Population[result_metro$Population < 1] <- NA
+    result_metro <- result_metro %>% fill(Population)
+    result_metro$Total[result_metro$Population == 1] <- 'Estimated total'
+    result_metro$Population[result_metro$Population == 1] <- NA
     result_metro <- result_metro %>% fill(Population)
     result_metro <- result_metro %>% filter(Total == 'Estimated total')
     
     # Calculate crime rate
-    result_metro$CrimeRate <- result_metro$ViolentCrime / (result_metro$Population / 100000)
+    result_metro$ViolentCrimeRate <- result_metro$ViolentCrime / (result_metro$Population / 100000)
+    result_metro$PropertyCrimeRate <- result_metro$PropertyCrime / (result_metro$Population / 100000)
     
     fbi_metro <- rbind(fbi_metro, result_metro)
   }
@@ -86,7 +92,8 @@ get_metro_data <- function(path) {
   fbi_metro$State <- trimws(fbi_metro$State)
   
   # Remove any rows with incomplete data
-  fbi_metro <- fbi_metro[!is.na(fbi_metro$CrimeRate), ]
+  fbi_metro <- fbi_metro[!is.na(fbi_metro$ViolentCrimeRate), ]
+  fbi_metro <- fbi_metro[!is.na(fbi_metro$PropertyCrimeRate), ]
   
   fbi_metro <- add_legalization_status(fbi_metro)
   fbi_metro

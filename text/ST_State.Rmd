@@ -1,0 +1,35 @@
+---
+title: "ST_State"
+author: "Alyson Givre"
+date: "4/26/2021"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# State Level Data
+
+### Two-Sample T-Test (Two-Tailed)
+
+```{r get_data, echo=FALSE}
+source('../process-data.R')
+
+fbi <- get_state_data('../data/')
+```
+
+```{r t_test, echo=TRUE}
+
+t.test(fbi[fbi$Legalized == FALSE, ]$ViolentCrimeRate, fbi[fbi$Legalized == TRUE, ]$ViolentCrimeRate, alternative="two.sided")
+```
+
+### Regression Analysis
+```{r reg, echo=TRUE}
+fbi$Legalized <- factor(fbi$Legalized) 
+
+model <- lm(ViolentCrimeRate ~ Legalized, data=fbi)
+summary(model)$coef
+
+```

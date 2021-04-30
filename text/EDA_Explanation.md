@@ -1,0 +1,5 @@
+To the right, you can see statistical information about the dataset. You can either view it on a "State" or "Metro" level. The "State" level looks at each state as a whole, including both metropolitan and non-metropolitan areas. The "Metro" level looks at just the metropolitan areas. These two divisions were chosen because there is a proven statistical relationship between population and the types of crime reported in the FBI's UCR. The larger a jurisdiction's population the higher the property crime rate is likely to be [4]. Therefore, by studying the metropolitan areas in each state, we are examining the areas likely to be most impacted by legalization legislation.
+
+You can also view the data for either Violent or Property crimes.
+
+An observation we can make by looking at these statistics and graphs is that violent crime appears to be relatively normally distributed, with a long right tail. Property crime appears to be distributed more closely to a binomial distribution. Overall, the amount of property crime committed per year is much higher than the amount of violent crime, both on the state and metropolitan levels.

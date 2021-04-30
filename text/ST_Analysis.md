@@ -1,0 +1,5 @@
+Two types of statistical testing were applied to the data. They can be viewed to the right.
+
+The first test is a two-tailed two-sample t-test to check for equal means. It compares the crime rates of states where cannabis has been fully legalized to those that have not. We can see that in all breakdowns of the data (State/Metro, Violent/Property), the p-values obtained are all greater than 0.05. This means that we do not have enough evidence to reject the null hypothesis. We cannot draw any definitve conclusions from this test.
+
+The second test performed is a regression analysis. Since the legalization status of a state is a categorical value, the value of the column `Legalized` was transformed using dummy coding. The coefficients for `LegalizedTRUE` are positive for violent crime, but negative for property crime. This indicates that the amount of violent crime increases with cannabis legalization, while the amount of property crime decreases. However, since the p-values are all greater than 0.05, we do not have enough evidence to say for sure. 

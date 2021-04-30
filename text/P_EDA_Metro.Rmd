@@ -1,7 +1,7 @@
 ---
-title: "EDA Metro"
+title: "P_EDA_Metro"
 author: "Alyson Givre"
-date: "4/25/2021"
+date: "4/28/2021"
 output: html_document
 runtime: shiny
 ---
@@ -18,21 +18,21 @@ source('../process-data.R')
 
 fbi <- get_metro_data('../data/')
 
-s <- sd(fbi$ViolentCrimeRate)
+s <- sd(fbi$PropertyCrimeRate)
 v <- s**2
   
-sprintf('Mean: %.2f', mean(fbi$ViolentCrimeRate))
-sprintf('Median: %.2f', median(fbi$ViolentCrimeRate))
+sprintf('Mean: %.2f', mean(fbi$PropertyCrimeRate))
+sprintf('Median: %.2f', median(fbi$PropertyCrimeRate))
 sprintf('Standard deviation: %.2f', s)
 sprintf('Variance: %.2f', v)
-sprintf('Range: (%.2f, %.2f)', min(fbi$ViolentCrimeRate), max(fbi$ViolentCrimeRate))
+sprintf('Range: (%.2f, %.2f)', min(fbi$PropertyCrimeRate), max(fbi$PropertyCrimeRate))
 ```
 
 
 ### Histogram of Crime Rate
 ```{r hist, echo=FALSE}
 
-ggplot(data=fbi, aes(x=ViolentCrimeRate)) +
+ggplot(data=fbi, aes(x=PropertyCrimeRate)) +
   geom_histogram(aes(y = ..density..,fill=..count..,alpha=0.2),bins=32, closed='left') +
   geom_density(fill='red',alpha=0.2) +
   xlab('Crime Rate (per 100,000)') +
@@ -43,25 +43,25 @@ ggplot(data=fbi, aes(x=ViolentCrimeRate)) +
 ### QQ Plot
 ```{r qq, echo=FALSE}
 
-ggplot(fbi, aes(sample=ViolentCrimeRate)) +
+ggplot(fbi, aes(sample=PropertyCrimeRate)) +
   stat_qq() +
   stat_qq_line()
 ```
 
-### Population versus Violent Crime
+### Population versus Number of Crime Incidents
 ```{r vc, echo=FALSE}
 
 fbi$LegalizedText <- ifelse(fbi$Legalized, 'Legal', 'Illegal')
 
-ggplot(fbi, aes(x=Population, y=ViolentCrimeRate)) + 
+ggplot(fbi, aes(x=Population, y=PropertyCrimeRate)) + 
   geom_point() +
   geom_smooth(method=lm) +
   facet_grid(. ~ LegalizedText)
 ```
 
-### Population versus Number of Crime Incidents
+### Population versus Crime Rate
 ```{r pop, echo=FALSE}
-ggplot(fbi, aes(x=Population, y=ViolentCrimeRate)) + 
+ggplot(fbi, aes(x=Population, y=PropertyCrimeRate)) + 
   geom_point() +
   geom_smooth(method=lm) +
   facet_grid(. ~ LegalizedText)

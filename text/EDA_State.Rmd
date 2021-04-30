@@ -18,21 +18,21 @@ source('../process-data.R')
 
 fbi <- get_state_data('../data/')
 
-s <- sd(fbi$CrimeRate)
+s <- sd(fbi$ViolentCrimeRate)
 v <- s**2
   
-sprintf('Mean: %.2f', mean(fbi$CrimeRate))
-sprintf('Median: %.2f', median(fbi$CrimeRate))
+sprintf('Mean: %.2f', mean(fbi$ViolentCrimeRate))
+sprintf('Median: %.2f', median(fbi$ViolentCrimeRate))
 sprintf('Standard deviation: %.2f', s)
 sprintf('Variance: %.2f', v)
-sprintf('Range: (%.2f, %.2f)', min(fbi$CrimeRate), max(fbi$CrimeRate))
+sprintf('Range: (%.2f, %.2f)', min(fbi$ViolentCrimeRate), max(fbi$ViolentCrimeRate))
 ```
 
 
 ### Histogram of Crime Rate
 ```{r hist, echo=FALSE}
 
-ggplot(data=fbi, aes(x=CrimeRate)) +
+ggplot(data=fbi, aes(x=ViolentCrimeRate)) +
   geom_histogram(aes(y = ..density..,fill=..count..,alpha=0.2),bins=32, closed='left') +
   geom_density(fill='red',alpha=0.2) +
   xlab('Crime Rate (per 100,000)') +
@@ -43,17 +43,17 @@ ggplot(data=fbi, aes(x=CrimeRate)) +
 ### QQ Plot
 ```{r qq, echo=FALSE}
 
-ggplot(fbi, aes(sample=CrimeRate)) +
+ggplot(fbi, aes(sample=ViolentCrimeRate)) +
   stat_qq() +
   stat_qq_line()
 ```
 
-### Population versus Violent Crime
+### Population versus Number of Crime Incidents
 ```{r vc, echo=FALSE}
 
 fbi$LegalizedText <- ifelse(fbi$Legalized, 'Legal', 'Illegal')
 
-ggplot(fbi, aes(x=Population, y=ViolentCrime)) + 
+ggplot(fbi, aes(x=Population, y=ViolentCrimeRate)) + 
   geom_point() +
   geom_smooth(method=lm) +
   facet_grid(. ~ LegalizedText)
@@ -61,7 +61,7 @@ ggplot(fbi, aes(x=Population, y=ViolentCrime)) +
 
 ### Population versus Crime Rate
 ```{r pop, echo=FALSE}
-ggplot(fbi, aes(x=Population, y=CrimeRate)) + 
+ggplot(fbi, aes(x=Population, y=ViolentCrimeRate)) + 
   geom_point() +
   geom_smooth(method=lm) +
   facet_grid(. ~ LegalizedText)
