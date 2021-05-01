@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 All data used in this application was extracted from the [FBI Uniform Crime Reporting (UCR) Program](https://www.fbi.gov/services/cjis/ucr). The program has been collecting data since 1930 from over 18,000 law enforcement agencies. It includes data on both violent and property crimes.
 
 This application includes a subset of this data from 2010 to 2019 broken down by state. Below is a further subset of the data which includes the columns:
-  * `State`
+  * `State` - Includes all fifty states, plus Puerto Rico and the District ol Columbia
   * `Population` - Total population of the state
   * `ViolentCrime` - Total number of violent crimes committed per year
   * `PropertyCrime` - Total number of property crimes committed per year
@@ -35,7 +35,7 @@ fbi_state[, c(1, 4, 5, 10, 14, 15, 16, 17)] %>%
 
 Another subset this application looks at is the same information, focused on the metropolitan areas within each state. The data below contains the following columns:
 
-  * `State`
+  * `State` - Includes all fifty states, plus Puerto Rico and the District ol Columbia
   * `Population` - Total population within the state's metropolitan areas
   * `ViolentCrime` - Total number of violent crimes committed per year within the state's metropolitan areas
   * `PropertyCrime` - Total number of property crimes committed per year within the state's metropolitan areas

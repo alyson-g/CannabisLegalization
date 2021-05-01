@@ -13,14 +13,16 @@ knitr::opts_chunk$set(echo = TRUE)
 # State Level Data
 
 ### Descriptive Statistics
-```{r state, echo=FALSE}
+```{r state, include=FALSE}
 source('../process-data.R')
 
 fbi <- get_state_data('../data/')
 
 s <- sd(fbi$PropertyCrimeRate)
 v <- s**2
-  
+```
+
+```{r echo=FALSE}
 sprintf('Mean: %.2f', mean(fbi$PropertyCrimeRate))
 sprintf('Median: %.2f', median(fbi$PropertyCrimeRate))
 sprintf('Standard deviation: %.2f', s)

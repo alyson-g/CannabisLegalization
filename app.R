@@ -12,6 +12,12 @@ library(markdown)
 library(knitr)
 library(kableExtra)
 library(rmarkdown)
+library(readxl)
+library(tidyr)
+library(ggplot2)
+library(maps)
+library(mapproj)
+library(ggthemes)
 
 # Define UI for application
 ui <- shinyUI(

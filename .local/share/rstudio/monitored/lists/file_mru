@@ -1,0 +1,15 @@
+~/.gitignore
+~/README.md
+~/text/About.Rmd
+~/text/Citations.md
+~/text/Conclusion.md
+~/process-data.R
+~/text/Introduction.md
+~/text/ST_Analysis.md
+~/text/EDA_Explanation.md
+~/text/ST_State.Rmd
+~/text/ST_Metro.Rmd
+~/text/P_ST_State.Rmd
+~/text/P_ST_Metro.Rmd
+~/text/P_EDA_State.Rmd
+~/text/P_EDA_Metro.Rmd

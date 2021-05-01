@@ -24,7 +24,7 @@ get_state_data <- function(path) {
     result <- result %>% fill(Area)
     result$Year <- i
     
-    result_state <- result %>% filter(Area == 'State Total')
+    result_state <- result %>% filter(Area == 'State Total' | Area == 'Total')
     result_state <- result_state %>% filter(is.na(Total))
     
     # Calculate crime rate
@@ -111,6 +111,7 @@ add_legalization_status <- function(fbi) {
   fbi$Legalized <- fbi$Legalized | (fbi$Year >= 2014 & fbi$State == 'OREGON')
   fbi$Legalized <- fbi$Legalized | (fbi$Year >= 2018 & fbi$State == 'VERMONT')
   fbi$Legalized <- fbi$Legalized | (fbi$Year >= 2012 & fbi$State == 'WASHINGTON')
+  fbi$Legalized <- fbi$Legalized | (fbi$Year >= 2015 & fbi$State == 'DISTRICT OF COLUMBIA')
   
   fbi  
 }

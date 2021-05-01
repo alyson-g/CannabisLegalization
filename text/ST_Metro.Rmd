@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # State Level Data
 
 ### Two-Sample T-Test (Two-Tailed)
-```{r get_data, echo=FALSE}
+```{r get_data, include=FALSE}
 source('../process-data.R')
 
 fbi <- get_metro_data('../data/')

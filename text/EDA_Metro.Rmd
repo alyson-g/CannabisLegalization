@@ -13,14 +13,16 @@ knitr::opts_chunk$set(echo = TRUE)
 # Metropolitan Level Data
 
 ### Descriptive Statistics
-```{r state, echo=FALSE}
+```{r state, include=FALSE}
 source('../process-data.R')
 
 fbi <- get_metro_data('../data/')
 
 s <- sd(fbi$ViolentCrimeRate)
 v <- s**2
-  
+```
+
+```{r, echo=FALSE}
 sprintf('Mean: %.2f', mean(fbi$ViolentCrimeRate))
 sprintf('Median: %.2f', median(fbi$ViolentCrimeRate))
 sprintf('Standard deviation: %.2f', s)
